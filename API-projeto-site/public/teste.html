@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="obtermediafilme(1)">obter a media</button> <!-- <button onclick="mostrar_vglobal()"></button> -->
+    <div id="div_resp"></div>
+</body>
+</html>
+
+<script>
+    var stringfado=''
+    var testemudar=0
+    function obtermediafilme(idfilme) {
+        var media_do_select = ""
+        //aguardar();
+        fetch(`/leituras/medias/${idfilme}`)
+        .then(resposta => {
+
+            if (resposta.ok) {
+                resposta.json().then(function (resposta) {
+
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                    // aqui, após registro. use os nomes 
+                    // dos atributos que vem no JSON 
+                    // div_resp.innerHTML+=JSON.stringify(resposta);
+                    stringfado=JSON.stringify(resposta);
+                    let numero=pegar_numero(stringfado)
+                    div_resp.innerHTML+=`dentro ${numero} <br>`
+                    window.testemudar=numero;
+                    // alertar(resposta.temperatura, resposta.umidade, idcaminhao);      // ESTA FAZENDO ISSO DEPOIS!!!
+                    // atualizarTela(dados, idcaminhao);
+                    
+                    
+                });
+            } else {
+
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+        .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+
+
+            // return (numero)
+    }
+
+    function pegar_numero(texto) {
+        resp=""
+        for (let cont = 0; cont < texto.length; cont++) {
+            if (texto[cont]=='1' || texto[cont]=='2' || texto[cont]=='3' || texto[cont]=='4' || texto[cont]=='5' || texto[cont]=='6' || texto[cont]=='7' || texto[cont]=='8' || texto[cont]=='9' || texto[cont]=='0' || texto[cont]=='.' ) {
+                resp+=texto[cont]
+            }
+            
+        }
+        return (resp)
+    }
+    obtermediafilme(1)
+    div_resp.innerHTML+=`teste mudar: ${testemudar}<br>`
+</script>

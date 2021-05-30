@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+    <div class="cabecalho">
+        <img src="fita ajustada.png" class="logo">
+        <div class="titulo">Resenhas</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><b>Cadastro</b></li>
+                <li><a href="analises.html">Analises</a></li>
+                <li><a href="chat_block.html">Chat</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <div class="div_cadastro">
+        <h2>Insira seus dados para o cadastro:</h2><br><br><br>
+        <form id="form_cadastro">
+            Nome completo: <br>
+            <input type="text" name="nome"  placeholder="Nome e sobrenome" > <br><br><br>
+            
+            E-mail: <br>
+            <input type="text" name="login"  placeholder="seu nome de usuário" > <br><br><br>
+            
+            Senha: <br>
+            <input type="password" name="senha"  placeholder="***************"> <br><br><br><br>
+            
+                
+            <button type="button" onclick="cadastrar()">Cadastrar</button>
+        </form>
+    </div>
+
+    <img src="quadros2.png" class="quadros">
+    <br><br><br><br>
+    <div class="rodape"></div>
+</body>
+</html>
+
+<script>
+    function cadastrar() {
+        // aguardar();
+        var formulario = new URLSearchParams(new FormData(form_cadastro));
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            body: formulario
+        }).then(function (response) {
+            
+            if (response.ok) {
+
+                window.location.href='index.html';  //MUDADO PRA INDEX (DE LOGIN)
+
+            } else {
+
+                console.log('Erro de cadastro!');
+                response.text().then(function (resposta) {
+                    div_erro.innerHTML = resposta;
+                });
+                // finalizar_aguardar();
+            }
+        });
+
+        return false;
+    }
+</script>

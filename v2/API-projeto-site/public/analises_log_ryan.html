@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="analises_log.css">
+</head>
+
+<body>
+    <div class="cabecalho">
+        <img src="fita ajustada.png" class="logo">
+        <div class="titulo">Resenhas</div>
+        <nav>
+            <ul>
+                <li><a href="home_log.html">Home</a></li>
+                <li><b>Analises</b></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="index.html">Sair</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="icones_filmes">
+        <img onclick="ryan()" src="Saving_Private_Ryan_movie.jpg">
+        <img onclick="stalker()" src="stalker movie.jpg">
+        <img onclick="alien()" src="alien.jpg">
+        <img onclick="bad()" src="breaking.jpeg">
+        <img onclick="friends()" src="friends_.jpg">
+        <img onclick="kong()" src="kong.jpg">
+        <img onclick="bladerunner()" src="bladerunner.jpg">
+
+    </div>
+    <img id="imagem" src="bladerunner.jpg" class="filme_selecionado">
+    <div class="div_analise">
+        <div class="titulo_analise" id="titulo_an">O resgate do soldado Ryan (1998) - Steven Spielberg (nota 9.8) </div>
+        <!--Alien (1979) - Ridley Scott-->
+        <div class="div_select" id="div_sel"><select id="analise_selecionada" onchange="mudar()">
+                <option value="">Selecione uma analise</option>
+                <option value="1">Analise de Ricardo (nota 6)</option>
+            </select></div>
+        <div class="texto_analise" id="texto_an">
+            <!-- <div class="analise_usuario">
+                Digite aqui sua análise:<br>
+                <input class="ipt_analise" maxlength="3000" id="ipt_an">
+                <br><button onclick="registrar_analise()">Registrar análise</button>
+            </div> -->
+        </div>
+
+    </div>
+    <div class="div_inputs">
+        Nota para o filme/série <input id="nota_filme"> <button class="button1" onclick="recalcular_filme()">Registrar</button>
+        Nota para a análise <input id="nota_analise"> <button onclick="recalcular()">Registrar</button> 
+        <button class="btn_escrever" onclick="escrever()">Escrever uma análise</button>
+    </div>
+    <br><br><br><br><br>
+    <div class="rodape"></div>
+</body>
+
+</html>
+
+<script>
+    var an1 = 0;
+    var an2 = 0;
+    var an3 = 0;
+    var an4 = 0;
+    var an5 = 0;
+    var an6 = 0;
+    var an7 = 0;
+    var an8 = 0;
+    var an9 = 0;
+    var an10 = 0;
+    var an11 = 0;
+
+    var ar_an1 = 0;
+    var ar_an2 = 0;
+    var ar_an3 = 0;
+    var ar_an4 = 0;
+    var ar_an5 = 0;
+    var ar_an6 = 0;
+    var ar_an7 = 0;
+    var ar_an8 = 0;
+    var ar_an9 = 0;
+    var ar_an10 = 0;
+    var ar_an11 = 0;
+
+    var fi1=9.8;
+    var fi2=8.2;
+    var fi3=9.5;
+    var fi4=9.2;
+    var fi5=6.8;
+    var fi6=5.4;
+    var fi7=9.9;
+
+    var armazenado=false
+    var analise_selec=0
+    var filme_selec=0
+
+    var us_an1=""
+    var us_an2=""
+    var us_an3=""
+    var us_an4=""
+    var us_an5=""
+    var us_an6=""
+    var us_an7=""
+
+    var avaliou_ryan=false
+    var avaliou_stalker=false
+    var avaliou_alien=false
+    var avaliou_bad=false
+    var avaliou_friends=false
+    var avaliou_kong=false
+    var avaliou_bladerunner=false
+
+    function escrever() {
+        texto_an.innerHTML=`<div class="analise_usuario">
+                Digite aqui sua análise:<br>
+                <input class="ipt_analise" maxlength="3000" id="ipt_an">
+                <br><button onclick="registrar_analise()">Registrar análise</button>
+            </div>`
+    }
+
+
+
+
+    function obtermedia1(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        // aqui, após registro. use os nomes 
+                        // dos atributos que vem no JSON 
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an1 = numero;
+                        ryan()
+                        // alertar(resposta.temperatura, resposta.umidade, idcaminhao);      // ESTA FAZENDO ISSO DEPOIS!!!
+                        // atualizarTela(dados, idcaminhao);
+                    });
+                } else {
+
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function pegar_numero(texto) {
+        resp = ""
+        for (let cont = 0; cont < texto.length; cont++) {
+            if (texto[cont] == '1' || texto[cont] == '2' || texto[cont] == '3' || texto[cont] == '4' || texto[cont] == '5' || texto[cont] == '6' || texto[cont] == '7' || texto[cont] == '8' || texto[cont] == '9' || texto[cont] == '0' || texto[cont] == '.') {
+                resp += texto[cont]
+            }
+
+        }
+        return (resp)
+    }
+
+    function obtermedia2(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an2 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia3(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an3 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia4(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an4 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia5(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an5 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia6(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an6 = numero;
+                        ryan()
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia7(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an7 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia8(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an8 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia9(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an9 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia10(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an10 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia11(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an11 = numero;
+
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function armazenar() {
+        window.ar_an1 = an1;
+        window.ar_an2 = an2;
+        window.ar_an3 = an3;
+        window.ar_an4 = an4;
+        window.ar_an5 = an5;
+        window.ar_an6 = an6;
+        window.ar_an7 = an7;
+        window.ar_an8 = an8;
+        window.ar_an9 = an9;
+        window.ar_an10 = an10;
+        window.ar_an11 = an11;
+    }
+
+    function recalcular() {
+        if (nota_analise.value>=0 && nota_analise.value<=10) {
+            if (armazenado==false) {
+            armazenar();
+            armazenado=true
+        }
+        if (analise_selec==1) {
+            window.an1=Number(((Number(nota_analise.value) + ar_an1*2)/3).toFixed(1))
+            ryan()
+        } else if (analise_selec==2) {
+            window.an2=Number(((Number(nota_analise.value) + ar_an2*2)/3).toFixed(1))
+            alien()
+        } else if (analise_selec==3) {
+            window.an3=Number(((Number(nota_analise.value) + ar_an3*2)/3).toFixed(1))
+            stalker()
+        } else if (analise_selec==4) {
+            window.an4=Number(((Number(nota_analise.value) + ar_an4*2)/3).toFixed(1))
+            alien()
+        } else if (analise_selec==5) {
+            window.an5=Number(((Number(nota_analise.value) + ar_an5*2)/3).toFixed(1))
+            stalker()
+        } else if (analise_selec==6) {
+            window.an6=Number(((Number(nota_analise.value) + ar_an6*2)/3).toFixed(1))
+            ryan()
+        } else if (analise_selec==7) {
+            window.an7=Number(((Number(nota_analise.value) + ar_an7*2)/3).toFixed(1))
+            bad()
+        } else if (analise_selec==8) {
+            window.an8=Number(((Number(nota_analise.value) + ar_an8*2)/3).toFixed(1))
+            bad()
+        } else if (analise_selec==9) {
+            window.an9=Number(((Number(nota_analise.value) + ar_an9*2)/3).toFixed(1))
+            friends()
+        } else if (analise_selec==10) {
+            window.an10=Number(((Number(nota_analise.value) + ar_an10*2)/3).toFixed(1))
+            kong()
+        } else if (analise_selec==11) {
+            window.an11=Number(((Number(nota_analise.value) + ar_an11*2)/3).toFixed(1))
+            bladerunner()
+        }
+        } else {
+            alert("Atribua uma nota de 0 a 10")
+        }
+
+    }
+
+    function recalcular_filme() {
+
+        if (nota_filme.value>=0 && nota_filme.value<=10) {
+            if (filme_selec==1) {
+            window.fi1=Number(((Number(nota_filme.value) + 9.8*2)/3).toFixed(1))
+            ryan()
+        } else if (filme_selec==2) {
+            window.fi2=Number(((Number(nota_filme.value) + 8.2*2)/3).toFixed(1))
+            stalker()
+        } else if (filme_selec==3) {
+            window.fi3=Number(((Number(nota_filme.value) + 9.5*2)/3).toFixed(1))
+            alien()
+        } else if (filme_selec==4) {
+            window.fi4=Number(((Number(nota_filme.value) + 9.2*2)/3).toFixed(1))
+            bad()
+        } else if (filme_selec==5) {
+            window.fi5=Number(((Number(nota_filme.value) + 6.8*2)/3).toFixed(1))
+            friends()
+        } else if (filme_selec==6) {
+            window.fi6=Number(((Number(nota_filme.value) + 5.4*2)/3).toFixed(1))
+            kong()
+        } else if (filme_selec==7) {
+            window.fi7=Number(((Number(nota_filme.value) + 9.9*2)/3).toFixed(1))
+            bladerunner()
+        } 
+        } else {
+            alert("Atribua uma nota de 0 a 10")
+        }
+
+    }
+
+
+    obtermedia1(1)
+    obtermedia2(2)
+    obtermedia3(3)
+    obtermedia4(4)
+    obtermedia5(5)
+    obtermedia6(6)
+    obtermedia7(7)
+    obtermedia8(8)
+    obtermedia9(9)
+    obtermedia10(10)
+    obtermedia11(11)
+    
+    
+
+
+
+    function alien() {
+        if (avaliou_alien==false) {
+            alien_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="2">Analise de Maria (nota ${an2})</option>
+            <option value="4">Analise de Jonas (nota ${an4})</option>
+        </select>`
+        } else {
+            alien_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="2">Analise de Maria (nota ${an2})</option>
+            <option value="4">Analise de Jonas (nota ${an4})</option>
+            <option value="14">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "alien.jpg"
+        titulo_an.innerHTML = `Alien (1979) - Ridley Scott (nota ${fi3})`
+        div_sel.innerHTML = `${alien_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=3
+    }
+
+    function stalker() {
+        if (avaliou_stalker==false) {
+            stalker_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="3">Analise de João (nota ${an3})</option>
+            <option value="5">Analise de Mariana (nota ${an5})</option>
+        </select>`
+        } else {
+            stalker_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="3">Analise de João (nota ${an3})</option>
+            <option value="5">Analise de Mariana (nota ${an5})</option>
+            <option value="13">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "stalker movie.jpg"
+        titulo_an.innerHTML = `Stalker (1979) - Andrei Tarkovsky (nota ${fi2})`
+        div_sel.innerHTML = `${stalker_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=2
+    }
+
+     
+
+    function ryan() {
+        if (avaliou_ryan==false) {
+            ryan_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="1">Analise de Ricardo (nota ${an1})</option>
+            <option value="6">Analise de Lucas (nota ${an6})</option>
+        </select>`
+        } else {
+            ryan_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="1">Analise de Ricardo (nota ${an1})</option>
+            <option value="6">Analise de Lucas (nota ${an6})</option>
+            <option value="12">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        
+        imagem.src = "Saving_Private_Ryan_movie.jpg"
+        titulo_an.innerHTML = `O resgate do soldado Ryan (1998) - Steven Spielberg (nota ${fi1})`
+        div_sel.innerHTML = `${ryan_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=1
+    }
+
+    function bad() {
+        if (avaliou_bad==false) {
+            bad_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="7">Analise de Amanda (nota ${an7})</option>
+            <option value="8">Analise de Vinicius (nota ${an8})</option>
+        </select>`
+        } else {
+            bad_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="7">Analise de Amanda (nota ${an7})</option>
+            <option value="8">Analise de Vinicius (nota ${an8})</option>
+            <option value="15">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "breaking.jpeg"
+        titulo_an.innerHTML = `Breaking bad (nota ${fi4})`
+        div_sel.innerHTML = `${bad_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=4
+    }
+
+    function friends() {
+        if (avaliou_friends==false) {
+            friends_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="9">Analise de Victor (nota ${an9})</option>
+        </select>`
+        } else {
+            friends_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="9">Analise de Victor (nota ${an9})</option>
+            <option value="16">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "friends_.jpg"
+        titulo_an.innerHTML = `Friends (nota ${fi5})`
+        div_sel.innerHTML = `${friends_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=5
+    }
+
+    function kong() {
+        if (avaliou_kong==false) {
+            kong_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="10">Analise de Matheus (nota ${an10})</option>
+        </select>`
+        } else {
+            kong_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="10">Analise de Matheus (nota ${an10})</option>
+            <option value="17">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "kong.jpg"
+        titulo_an.innerHTML = `Godzilla vs Kong (2021) - Adam Wingard (nota ${fi6})`
+        div_sel.innerHTML = `${kong_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=6
+    }
+
+    function bladerunner() {
+        if (avaliou_bladerunner==false) {
+            bladerunner_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="11">Analise de Matheus (nota ${an11})</option>
+        </select>`
+        } else {
+            bladerunner_sel=`<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="11">Analise de Matheus (nota ${an11})</option>
+            <option value="18">Sua análise (não avaliado)</option>
+        </select>`
+        }
+        imagem.src = "bladerunner.jpg"
+        titulo_an.innerHTML = `Bladerunner (1982) - Ridley Scott (nota ${fi7})`
+        div_sel.innerHTML = `${bladerunner_sel}`
+        texto_an.innerHTML = ""
+        analise_selec=0
+        filme_selec=7
+    }
+
+    function mudar() {
+        if (analise_selecionada.value == "1") {
+            texto_an.innerHTML = "O Resgate do soldado ryan é considerado o maior filme de Spielberg porque ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=1
+
+
+        }
+
+        if (analise_selecionada.value == "2") {
+            texto_an.innerHTML = "Ainda que Alien seja um filme antigo ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=2
+        }
+
+        if (analise_selecionada.value == "3") {
+            texto_an.innerHTML = "O enredo de Stalker acontece em um país fictício ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=3
+        }
+
+
+        if (analise_selecionada.value == "4") {
+            texto_an.innerHTML = "Embora tenha um orçamento baixo, Alien consegue ser ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=4
+        }
+
+        if (analise_selecionada.value == "5") {
+            texto_an.innerHTML = "Stalker é um filme que gera controvérsia porque ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=5
+        }
+
+        if (analise_selecionada.value == "6") {
+            texto_an.innerHTML = "Eu nunca me esqueço da cena em resgate do soldado Ryan em que ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=6
+        }
+
+        if (analise_selecionada.value == "7") {
+            texto_an.innerHTML = "Desde o seu inicio, Breaking Bad foi uma das séries mais bem recebidas ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=7
+        }
+
+        if (analise_selecionada.value == "8") {
+            texto_an.innerHTML = "Breaking bad nos leva à reflexão sobre o que faríamos ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=8
+        }
+
+        if (analise_selecionada.value == "9") {
+            texto_an.innerHTML = "Na minha opinião, Friends é muito mais do que apenas uma serie de tv ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=9
+        }
+
+        if (analise_selecionada.value == "10") {
+            texto_an.innerHTML = "Godzilla vs Kong é um filme repleto de ação ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=10
+        }
+
+        if (analise_selecionada.value == "11") {
+            texto_an.innerHTML = "O filme Bladerunner trata sobre a questão ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+            analise_selec=11
+        }
+
+        if (analise_selecionada.value == "12") {
+            texto_an.innerHTML = `${us_an1}`
+            analise_selec=12
+        }
+
+        if (analise_selecionada.value == "13") {
+            texto_an.innerHTML = `${us_an2}`
+            analise_selec=13
+        }
+
+        if (analise_selecionada.value == "14") {
+            texto_an.innerHTML = `${us_an3}`
+            analise_selec=14
+        }
+
+        if (analise_selecionada.value == "15") {
+            texto_an.innerHTML = `${us_an4}`
+            analise_selec=15
+        }
+
+        if (analise_selecionada.value == "16") {
+            texto_an.innerHTML = `${us_an5}`
+            analise_selec=16
+        }
+
+        if (analise_selecionada.value == "17") {
+            texto_an.innerHTML = `${us_an6}`
+            analise_selec=17
+        }
+
+        if (analise_selecionada.value == "18") {
+            texto_an.innerHTML = `${us_an7}`
+            analise_selec=18
+        }
+
+    }
+
+    function registrar_analise() {
+        if (filme_selec==1) {
+            us_an1=ipt_an.value
+            avaliou_ryan=true
+            ryan()
+        } else if (filme_selec==2) {
+            us_an2=ipt_an.value
+            avaliou_stalker=true
+            stalker()
+        } else if (filme_selec==3) {
+            us_an3=ipt_an.value
+            avaliou_alien=true
+            alien()
+        } else if (filme_selec==4) {
+            us_an4=ipt_an.value
+            avaliou_bad=true
+            bad()
+        } else if (filme_selec==5) {
+            us_an5=ipt_an.value
+            avaliou_friends=true
+            friends()
+        } else if (filme_selec==6) {
+            us_an6=ipt_an.value
+            avaliou_kong=true
+            kong()
+        } else if (filme_selec==7) {
+            us_an7=ipt_an.value
+            avaliou_bladerunner=true
+            bladerunner()
+        }
+    }
+
+
+</script>
+
+<!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et? -->

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+<body>
+    <div class="cabecalho">
+        <img src="fita ajustada.png" class="logo">
+        <div class="titulo">Resenhas</div>
+        <nav>
+            <ul>
+                <li><a href="home_log.html">Home</a></li>
+                <li><a href="analises_log.html">Analises</li>
+                <li><b>Chat</b></li>
+                <li><a href="index.html">Sair</a></li>
+            </ul>
+        </nav>
+    </div>
+    <select class="combo" onchange="mudar()">
+        <option value="">Selecione o amigo</option>
+        <option value="1">Lucas</option>
+        <option value="2">Maria</option>
+        <option value="3">João</option>
+    </select>
+    <div class="registro_chat" id="reg_chat"></div> 
+    <input id="msg"> <button onclick="enviar()">Enviar</button>
+    <br><br><br><br><br><br><br>
+    <div class="rodape"><br><br>Feito com carinho por um aluno Bandtec. Copyright 2021</div>
+</body>
+</html>
+
+<script>
+    function mudar() {
+        reg_chat.innerHTML=""
+    }
+
+    function enviar() {
+        reg_chat.innerHTML+=`<b>Você:</b> ${msg.value}<br>`
+    }
+</script>

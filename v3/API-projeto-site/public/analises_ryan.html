@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/analises.css">
+</head>
+
+<body>
+    <div class="cabecalho">
+        <img src="fita ajustada.png" class="logo">
+        <div class="titulo">Resenhas</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+                <li><b>Analises</b></li>
+                <li><a href="chat_block.html">Chat</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="icones_filmes">
+        <img onclick="ryan()" src="Saving_Private_Ryan_movie.jpg">
+        <img onclick="stalker()" src="stalker movie.jpg">
+        <img onclick="alien()" src="alien.jpg">
+
+    </div>
+    <img id="imagem" src="Saving_Private_Ryan_movie.jpg" class="filme_selecionado">
+    <div class="div_analise">
+        <div class="titulo_analise" id="titulo_an">O resgate do soldado Ryan (1998) - Steven Spielberg (nota 9.8) </div>
+        <!--Alien (1979) - Ridley Scott-->
+        <div class="div_select" id="div_sel"><select id="analise_selecionada" onchange="mudar()">
+                <option value="">Selecione uma analise</option>
+                <option value="1">Analise de Ricardo (nota 6)</option>
+            </select></div>
+        <div class="texto_analise" id="texto_an"></div>
+        <div class="aviso"><b>Essas análises fazem parte do conteúdo limitado do site. Clique <a
+                    href="login.html"><b class="aqui"><u>aqui</u></b></a> para fazer login e ter acesso completo</b> </div>
+    </div>
+    <br><br><br><br><br>
+    <div class="rodape"><br><br>Feito com carinho por um aluno Bandtec. Copyright 2021</div>
+</body>
+
+</html>
+
+<script>
+    var an1 = 0;
+    var an2 = 0;
+    var an3 = 0;
+
+    var fi1=9.8;
+    var fi2=8.2;
+    var fi3=9.5;
+
+    function obtermedia1(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        // aqui, após registro. use os nomes 
+                        // dos atributos que vem no JSON 
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an1 = numero;
+                        ryan()
+
+                        // alertar(resposta.temperatura, resposta.umidade, idcaminhao);      // ESTA FAZENDO ISSO DEPOIS!!!
+                        // atualizarTela(dados, idcaminhao);
+                    });
+                } else {
+
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function pegar_numero(texto) {
+        resp = ""
+        for (let cont = 0; cont < texto.length; cont++) {
+            if (texto[cont] == '1' || texto[cont] == '2' || texto[cont] == '3' || texto[cont] == '4' || texto[cont] == '5' || texto[cont] == '6' || texto[cont] == '7' || texto[cont] == '8' || texto[cont] == '9' || texto[cont] == '0' || texto[cont] == '.') {
+                resp += texto[cont]
+            }
+
+        }
+        return (resp)
+    }
+
+    function obtermedia2(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an2 = numero;
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    function obtermedia3(fkfilme) {
+        //aguardar();
+        fetch(`/leituras/medias/${fkfilme}`)
+            .then(resposta => {
+
+                if (resposta.ok) {
+                    resposta.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`); // meu avg trazido
+                        stringfado = JSON.stringify(resposta);
+                        let numero = Number(pegar_numero(stringfado))
+                        window.an3 = numero;
+                        
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados do caminhao p/ gráfico: ${error.message}`);
+
+            });
+    }
+
+    obtermedia1(1)
+    obtermedia2(2)
+    obtermedia3(3)
+
+    function alien() {
+        imagem.src = "alien.jpg"
+        titulo_an.innerHTML = `Alien (1979) - Ridley Scott (nota ${fi3})`
+        div_sel.innerHTML = `<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="2">Analise de Maria (nota ${an2})</option>
+        </select>`
+        texto_an.innerHTML = ""
+    }
+
+    function stalker() {
+        imagem.src = "stalker movie.jpg"
+        titulo_an.innerHTML = `Stalker (1979) - Andrei Tarkovsky (nota ${fi2})`
+        div_sel.innerHTML = `<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="3">Analise de João (nota ${an3})</option>
+        </select>`
+        texto_an.innerHTML = ""
+    }
+
+    function ryan() {
+        imagem.src = "Saving_Private_Ryan_movie.jpg"
+        titulo_an.innerHTML = `O resgate do soldado Ryan (1998) - Steven Spielberg (${fi1})`
+        div_sel.innerHTML = `<select id="analise_selecionada" onchange="mudar()">
+            <option value="">Selecione uma analise</option>
+            <option value="1">Analise de Ricardo (nota ${an1})</option>
+        </select>`
+        texto_an.innerHTML = ""
+    }
+
+    function mudar() {
+        if (analise_selecionada.value == "1") {
+            texto_an.innerHTML = "O Resgate do soldado ryan é considerado o maior filme de Spielberg porque ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+
+
+        }
+
+        if (analise_selecionada.value == "2") {
+            texto_an.innerHTML = "Ainda que Alien seja um filme antigo ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+        }
+
+        if (analise_selecionada.value == "3") {
+            texto_an.innerHTML = "O enredo de Stalker acontece em um país fictício ... Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et?";
+        }
+    }
+
+
+
+
+</script>
+
+<!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti eaque sequi iure eveniet reprehenderit, sed ratione minus natus adipisci, repellendus et blanditiis quasi suscipit dicta quidem modi molestiae non molestias. Lorem ipsum dolor, sit amet consectetur adipisicing elit. In expedita pariatur quia, alias accusantium dolor aliquam excepturi vel libero optio dicta quas debitis ipsam nobis assumenda, voluptas ipsum itaque? Necessitatibus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ab iste placeat? Est consequatur, magni deserunt laudantium assumenda, vel adipisci provident enim commodi magnam recusandae at corrupti, quaerat sunt et? -->
